@@ -1,54 +1,18 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, ScrollView, View } from "react-native";
-import ProductCard from "./component/ProductCard";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import HomeScreen from "./screens/HomeScreen";
+import ProductDetail from "./screens/ProductDetail";
+
+const { Navigator, Screen } = createNativeStackNavigator();
 
 export default function App() {
   return (
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={styles.contentContainer}
-    >
-      <Text>This is a component</Text>
-      <View style={styles.grid}>
-        <View style={styles.card}>
-          <ProductCard />
-        </View>
-        <View style={styles.card}>
-          <ProductCard />
-        </View>
-        <View style={styles.card}>
-          <ProductCard />
-        </View>
-        <View style={styles.card}>
-          <ProductCard />
-        </View>
-        <View style={styles.card}>
-          <ProductCard />
-        </View>
-        <View style={styles.card}>
-          <ProductCard />
-        </View>
-      </View>
-      <StatusBar style="auto" />
-    </ScrollView>
+    <NavigationContainer>
+      <Navigator>
+        <Screen name="Home" component={HomeScreen} />
+        <Screen name="Details" component={ProductDetail} />
+      </Navigator>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
-  contentContainer: {
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  grid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
-  },
-  card: {
-    width: "48%",
-  },
-});

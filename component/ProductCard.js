@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigation } from "@react-navigation/native";
 import {
   StyleSheet,
   Text,
@@ -9,20 +10,22 @@ import {
   TextInput,
 } from "react-native";
 
-const ProductCard = ({ product }) => {
+const ProductCard = ({
+  title = "Automatic Litterbox",
+  description = "Keeps your home clean and odor-free.",
+  price = "$199.99",
+  image = require("../assets/smart_litterbox.png"),
+  onPress,
+}) => {
   const [subscribed, setSubscribed] = useState(false);
+  const navigation = useNavigation();
 
   return (
     <View style={styles.card}>
-      <Image
-        source={require("../images/smart_litterbox.webp")}
-        style={styles.image}
-      />
-      <Text style={styles.title}>Automatic Litterbox</Text>
-      <Text style={styles.description}>
-        Keeps your home clean and odor-free
-      </Text>
-      <Text style={styles.description}>Price: $199.99</Text>
+      <Image source={image} style={styles.image} />
+      <Text style={styles.title}>{title}</Text>
+      <Text style={styles.description}>{description}</Text>
+      <Text style={styles.description}>${price}</Text>
       <Text style={styles.label}>Amount</Text>
       <TextInput
         style={styles.input}
@@ -33,8 +36,18 @@ const ProductCard = ({ product }) => {
         <Text style={styles.switchLabel}>Auto-Refill Subscription</Text>
         <Switch value={subscribed} onValueChange={setSubscribed} />
       </View>
-      <Pressable style={styles.button}>
-        <Text style={styles.buttonText}>Add to Cart</Text>
+      <Pressable
+        style={styles.button}
+        onPress={() =>
+          navigation.navigate("Details", {
+            title,
+            description,
+            price,
+            image,
+          })
+        }
+      >
+        <Text style={styles.buttonText}>Look at product</Text>
       </Pressable>
     </View>
   );
