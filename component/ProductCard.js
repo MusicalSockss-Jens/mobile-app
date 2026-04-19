@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import {
   StyleSheet,
@@ -11,14 +11,34 @@ import {
 } from "react-native";
 
 const ProductCard = ({
+  id = "untitled",
   title = "Automatic Litterbox",
   description = "Keeps your home clean and odor-free.",
-  price = "$199.99",
+  price = "199.99",
   image = require("../assets/smart_litterbox.png"),
+  imageUrl = "",
   onPress,
+  onAddToCart,
 }) => {
   const [subscribed, setSubscribed] = useState(false);
   const navigation = useNavigation();
+
+  const handleAddToCart = () => {
+    console.log("Add to Cart pressed for:", title);
+    if (onAddToCart) {
+      // Extract the actual URL from the image object if needed
+      const imageString = typeof image === "string" ? image : imageUrl;
+      console.log("Calling onAddToCart with:", {
+        id,
+        title,
+        price,
+        image: imageString,
+      });
+      onAddToCart({ id, title, price, image: imageString });
+    } else {
+      console.log("onAddToCart callback not provided!");
+    }
+  };
 
   return (
     <View style={styles.card}>
@@ -36,19 +56,22 @@ const ProductCard = ({
         <Text style={styles.switchLabel}>Auto-Refill Subscription</Text>
         <Switch value={subscribed} onValueChange={setSubscribed} />
       </View>
-      <Pressable
-        style={styles.button}
-        onPress={() =>
-          navigation.navigate("Details", {
-            title,
-            description,
-            price,
-            image,
-          })
-        }
-      >
-        <Text style={styles.buttonText}>Look at product</Text>
-      </Pressable>
+      <View style={styles.buttonContainer}>
+        <Pressable
+          style={[styles.button, styles.detailsButton]}
+          onPress={onPress}
+        >
+          <Text style={styles.buttonText}>Details</Text>
+        </Pressable>
+        <Pressable
+          style={[styles.button, styles.cartButton]}
+          onPress={handleAddToCart}
+        >
+          <Text style={[styles.buttonText, styles.cartButtonText]}>
+            Add to Cart
+          </Text>
+        </Pressable>
+      </View>
     </View>
   );
 };
@@ -86,18 +109,31 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#333",
   },
+  buttonContainer: {
+    flexDirection: "row",
+    gap: 8,
+    marginTop: 12,
+  },
   button: {
-    backgroundColor: "#007AFF",
     paddingVertical: 10,
-    paddingHorizontal: 16,
+    paddingHorizontal: 12,
     borderRadius: 6,
     alignItems: "center",
-    marginTop: 12,
+    flex: 1,
+  },
+  detailsButton: {
+    backgroundColor: "#007AFF",
+  },
+  cartButton: {
+    backgroundColor: "#34C759",
   },
   buttonText: {
     color: "#fff",
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: "bold",
+  },
+  cartButtonText: {
+    color: "#fff",
   },
 });
 
